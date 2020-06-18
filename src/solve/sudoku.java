@@ -18,7 +18,7 @@ public class sudoku {
 	public void createPuzzle() {
 		setSolutionGrid(Puzzle.getQuiz());
 
-		int process = ran.nextInt(4);
+		int process = ran.nextInt(4)+1;
 		
 		factory(process);
 		
