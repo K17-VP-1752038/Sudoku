@@ -18,7 +18,7 @@ public class sudoku {
 	public void createPuzzle() {
 		setSolutionGrid(Puzzle.getQuiz());
 
-		int process = ran.nextInt(4)+1;
+		int process = ran.nextInt(5);
 		
 		factory(process);
 		
@@ -40,16 +40,17 @@ public class sudoku {
 	// Change the seed puzzle
 	private void factory(int pr) {
 		while(pr > 0) {
-			int choice = ran.nextInt(3); // choice = [0, 1, 2]
-			int[][] puz = getSolution();
+			int choice = ran.nextInt(2);//ran.nextInt(3); // choice = [0, 1, 2]
 			
-			if(choice == 0) {
+			if(choice == 0) {	// ROTATE
 				int pick = ran.nextInt(3); // pick = [0, 1, 2]
-								
+				int[][] puz = new int[n][n];
+				setArrayEqual(puz, soluGrid);
+				
 				if(pick == 0) {		// Rotate 90 degree to left
 					for(int i = 0; i < n; i++)
 						for(int j = 0; j < n; j++)
-							soluGrid[j][i] = puz[i][j];
+							soluGrid[n-1-j][i] = puz[i][j];
 				}
 				else if(pick == 1) {		// Rotate 90 degree to right
 					for(int i = 0; i < n; i++)
@@ -61,11 +62,14 @@ public class sudoku {
 						for(int j = 0; j < n; j++)
 							soluGrid[n-1-i][n-1-j] = puz[i][j];
 				}
+				
 			}
 			
-			if(choice == 1) {
+			if(choice == 1) {	// REVERSE
 				int pick = ran.nextInt(2); // pick = [0, 1]
-								
+				int[][] puz = new int[n][n];
+				setArrayEqual(puz, soluGrid);
+				
 				if(pick == 0) {		// Reverse horizontal
 					for(int i = 0; i < n; i++)
 						for(int j = 0; j < n; j++)
@@ -78,11 +82,11 @@ public class sudoku {
 				}
 			}
 			
-			if(choice == 2) {
+			if(choice == 2) {	// CHANGE COL, ROW, UNIT
 				int pick = ran.nextInt(4); // pick = [0, 1, 2, 3]
 				
 				if(pick == 0) {		// Change columns
-					for(int k = 0; k < 3; k++) {	// Divide columns in 3 units: 123|456|789
+					for(int k = 0; k < 3; k++) {	// Divide columns in 3 units: 012|345|678
 						int colToChange1 = ran.nextInt(3) + k*3;
 						int colToChange2 = ran.nextInt(3) + k*3;
 						
@@ -144,6 +148,14 @@ public class sudoku {
 			}
 			
 			pr--;
+		}
+	}
+	
+	void printArr(int[][] arr) {
+		for(int i = 0; i < n; i++) {
+			for(int j = 0; j < n; j++)
+				System.out.print(arr[i][j] + "  ");
+			System.out.println();
 		}
 	}
 
@@ -225,5 +237,12 @@ public class sudoku {
 		for(int i = 0; i < n; i++)
 			for(int j = 0; j < n; j++)
 				soluGrid[i][j] = arr[i][j];
+	}
+	
+	private void setArrayEqual(int[][] arr, int[][] tmp) {
+		for(int i = 0; i < tmp.length; i++) {
+			for(int j = 0; j < tmp[0].length; j++)
+				arr[i][j] = tmp[i][j];
+		}
 	}
 }
