@@ -26,6 +26,7 @@ public class Game extends JFrame implements ActionListener {
 	private JButton btn_new, btn_check, btn_submit, btn_restart;
 	private JFormattedTextField[][] grid;
 	private sudoku puzzle;
+	private boolean changeColor;
 	private static long second = 0;
 	
 	/**
@@ -57,6 +58,7 @@ public class Game extends JFrame implements ActionListener {
 		setResizable(false);
 		
 		puzzle = new sudoku(9);
+		changeColor = false;
 		
 		BufferedImage img;
 		try {
@@ -85,6 +87,14 @@ public class Game extends JFrame implements ActionListener {
 				grid[i][j].setHorizontalAlignment(JFormattedTextField.CENTER);
 				grid[i][j].setBorder(BorderFactory.createLineBorder(Color.orange.darker(), 1));
 				board.add(grid[i][j]);
+				
+				grid[i][j].addActionListener(new ActionListener() {
+					   @Override
+					    public void actionPerformed(ActionEvent e) {
+						   if(changeColor)
+							   resetPuzzleFont();
+					    }
+					});
 			}
 		}
 		
@@ -168,6 +178,14 @@ public class Game extends JFrame implements ActionListener {
 		getContentPane().add(btn_panel, BorderLayout.EAST);
 	}
 
+	// Reset the puzzle color
+	private void resetPuzzleFont() {
+		for(int i = 0; i < 9; i++)
+			for(int j = 0; j < 9; j++)
+				grid[i][j].setBackground(Color.WHITE);
+		changeColor = false;
+	}
+	
 	// Fill the sudoku puzzle
 	private void setSudokuContent(int[][] arr) {
 		for(int i = 0; i < 9; i++)
@@ -180,6 +198,16 @@ public class Game extends JFrame implements ActionListener {
 				}
 			}
 	}
+	
+	private boolean checkSudoku() {
+		int[][] sol = puzzle.getSolution();
+
+		for(int i = 0; i < 9; i++)
+			for(int j = 0; j < 9; j++)
+				if(grid[i][j].getText().isBlank() || !grid[i][j].getValue().equals(sol[i][j]))
+					return false;
+		return true;
+	}
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
@@ -187,15 +215,39 @@ public class Game extends JFrame implements ActionListener {
 			puzzle.createPuzzle();
 			setSudokuContent(puzzle.getGrid());
 		}
+		
 		if(e.getSource() == btn_check) {
 			int[][] sol = puzzle.getSolution();
 			
 			for(int i = 0; i < 9; i++)
-				for(int j = 0; j < 9; j++) {
-					if((int)grid[i][j].getValue() != sol[i][j]) {
-						
+				for(int j = 0; j < 9; j++)
+					if(grid[i][j].getText().isBlank() || !grid[i][j].getValue().equals(sol[i][j])) {
+						grid[i][j].setBackground(Color.ORANGE);
 					}
-				}
+			changeColor = true;
+		}
+		
+		if(e.getSource() == btn_restart) {
+			setSudokuContent(puzzle.getGrid());
+		}
+		
+		if(e.getSource() == btn_submit) {
+			
+			if(!checkSudoku()) {
+				JOptionPane.showMessageDialog(null, "Sorry but the answer is not correct :( ");
+					
+				int[][] sol = puzzle.getSolution();
+					
+				for(int i = 0; i < 9; i++)
+					for(int j = 0; j < 9; j++)
+						if(grid[i][j].getText().isBlank() || !grid[i][j].getValue().equals(sol[i][j])) {
+							grid[i][j].setBackground(Color.ORANGE);
+						}
+				changeColor = true;
+			}
+			else
+				JOptionPane.showMessageDialog(null, "Conglatulation! You're a genious :D ");
+			
 		}
 	}
 }
