@@ -54,6 +54,7 @@ public class Game extends JFrame implements ActionListener {
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
+		setLocationRelativeTo(null);
 		setTitle("Game sudoku");
 		setResizable(false);
 		
@@ -235,15 +236,16 @@ public class Game extends JFrame implements ActionListener {
 			
 			if(!checkSudoku()) {
 				JOptionPane.showMessageDialog(null, "Sorry but the answer is not correct :( ");
-					
-				int[][] sol = puzzle.getSolution();
-					
-				for(int i = 0; i < 9; i++)
-					for(int j = 0; j < 9; j++)
-						if(grid[i][j].getText().isBlank() || !grid[i][j].getValue().equals(sol[i][j])) {
-							grid[i][j].setBackground(Color.ORANGE);
-						}
-				changeColor = true;
+				if(!changeColor) {
+					int[][] sol = puzzle.getSolution();
+
+					for(int i = 0; i < 9; i++)
+						for(int j = 0; j < 9; j++)
+							if(grid[i][j].getText().isBlank() || !grid[i][j].getValue().equals(sol[i][j])) {
+								grid[i][j].setBackground(Color.ORANGE);
+								grid[i][j].setEditable(false);
+							}
+				}
 			}
 			else
 				JOptionPane.showMessageDialog(null, "Conglatulation! You're a genious :D ");
