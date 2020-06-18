@@ -8,6 +8,8 @@ import java.io.File;
 import java.io.IOException;
 import java.text.NumberFormat;
 import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
+
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -28,6 +30,7 @@ public class Game extends JFrame implements ActionListener {
 	private sudoku puzzle;
 	private boolean changeColor;
 	private static long second = 0;
+	private Timer timer;
 	
 	/**
 	 * Launch the application.
@@ -82,6 +85,7 @@ public class Game extends JFrame implements ActionListener {
 		for(int i = 0; i < 9; i++) {
 			for(int j = 0; j < 9; j++) {
 				grid[i][j] = new JFormattedTextField(number);
+				grid[i][j].setDocument(new JFormattedTextFieldLimit(1));
 				grid[i][j].setSize(new Dimension(50, 50));
 				grid[i][j].setMaximumSize(getSize());
 				grid[i][j].setFont(new Font("Arial", Font.PLAIN, 14));
@@ -112,13 +116,14 @@ public class Game extends JFrame implements ActionListener {
 		JLabel time_lbl = new JLabel("Time :");
 		time_run = new JLabel("00:00:00");
 		
-		Timer timer = new Timer(1000, new ActionListener() {
+		timer = new Timer(1000, new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				second++;
-				LocalTime now = LocalTime.parse("00:00:00");
+				LocalTime now = LocalTime.of(0, 0, 0);
+				//LocalTime now = LocalTime.parse("00:00:00", dtf);
 				LocalTime now2 = now.plusSeconds(second);
-				time_run.setText(now2.toString());
+				time_run.setText(now2.format(DateTimeFormatter.ISO_LOCAL_TIME));
 			}
 			
 		});
@@ -178,12 +183,23 @@ public class Game extends JFrame implements ActionListener {
 		getContentPane().add(time_panel, BorderLayout.WEST);
 		getContentPane().add(btn_panel, BorderLayout.EAST);
 	}
-
+	
+	// reset timer
+	private void resetTime() {
+		timer.stop();
+		time_run.setText("00:00:00");
+		second = 0;
+		timer.restart();
+	}
+	
 	// Reset the puzzle color
 	private void resetPuzzleFont() {
-		for(int i = 0; i < 9; i++)
-			for(int j = 0; j < 9; j++)
-				grid[i][j].setBackground(Color.WHITE);
+		for(int i = 0; i < 9; i++) {
+			for(int j = 0; j < 9; j++) {
+				if(grid[i][j].getText().isBlank())
+					grid[i][j].setBackground(Color.WHITE);
+			}
+		}
 		changeColor = false;
 	}
 	
@@ -209,12 +225,14 @@ public class Game extends JFrame implements ActionListener {
 					return false;
 		return true;
 	}
-
+	
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		if(e.getSource() == btn_new) {
 			puzzle.createPuzzle();
 			setSudokuContent(puzzle.getGrid());
+			resetPuzzleFont();
+			resetTime();
 		}
 		
 		if(e.getSource() == btn_check) {
@@ -230,6 +248,8 @@ public class Game extends JFrame implements ActionListener {
 		
 		if(e.getSource() == btn_restart) {
 			setSudokuContent(puzzle.getGrid());
+			resetPuzzleFont();
+			resetTime();
 		}
 		
 		if(e.getSource() == btn_submit) {
@@ -247,8 +267,10 @@ public class Game extends JFrame implements ActionListener {
 							}
 				}
 			}
-			else
-				JOptionPane.showMessageDialog(null, "Conglatulation! You're a genious :D ");
+			else {
+				timer.stop();
+				JOptionPane.showMessageDialog(null, "Conglatulation! You're a genious :D\n Your time is " + time_run);
+			}
 			
 		}
 	}
