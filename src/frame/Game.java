@@ -1,8 +1,7 @@
 package frame;
 
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import java.awt.event.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -93,9 +92,9 @@ public class Game extends JFrame implements ActionListener {
 				grid[i][j].setBorder(BorderFactory.createLineBorder(Color.orange.darker(), 1));
 				board.add(grid[i][j]);
 				
-				grid[i][j].addActionListener(new ActionListener() {
+				grid[i][j].addMouseListener(new MouseAdapter() {
 					   @Override
-					    public void actionPerformed(ActionEvent e) {
+					    public void mousePressed(MouseEvent e) {
 						   if(changeColor)
 							   resetPuzzleFont();
 					    }
@@ -106,6 +105,7 @@ public class Game extends JFrame implements ActionListener {
 		// Fill the sudoku puzzle at begin of program
 		puzzle.createPuzzle();
 		setSudokuContent(puzzle.getGrid());
+		puzzle.print();
 		
 		JPanel outer_board = new JPanel();
 		outer_board.add(board);
@@ -196,7 +196,7 @@ public class Game extends JFrame implements ActionListener {
 	private void resetPuzzleFont() {
 		for(int i = 0; i < 9; i++) {
 			for(int j = 0; j < 9; j++) {
-				if(grid[i][j].getText().isBlank())
+				if(grid[i][j].getBackground().equals(new Color(246, 178, 151)))
 					grid[i][j].setBackground(Color.WHITE);
 			}
 		}
@@ -207,11 +207,15 @@ public class Game extends JFrame implements ActionListener {
 	private void setSudokuContent(int[][] arr) {
 		for(int i = 0; i < 9; i++)
 			for(int j = 0; j < 9; j++) {
-				grid[i][j].setValue(null);
+				grid[i][j].setText(null);
+				grid[i][j].setBackground(Color.WHITE);
 				grid[i][j].setEditable(true);
+				grid[i][j].setEnabled(true);
 				if(arr[i][j] > 0) {
-					grid[i][j].setValue((int)arr[i][j]);
+					grid[i][j].setText(arr[i][j] + "");
+					grid[i][j].setBackground(new Color(54,117,23));
 					grid[i][j].setEditable(false);
+					grid[i][j].setEnabled(false);
 				}
 			}
 	}
@@ -221,7 +225,7 @@ public class Game extends JFrame implements ActionListener {
 
 		for(int i = 0; i < 9; i++)
 			for(int j = 0; j < 9; j++)
-				if(grid[i][j].getText().isBlank() || !grid[i][j].getValue().equals(sol[i][j]))
+				if(grid[i][j].getText().isBlank() || (Integer.parseInt(grid[i][j].getText()) != sol[i][j]))
 					return false;
 		return true;
 	}
@@ -239,10 +243,16 @@ public class Game extends JFrame implements ActionListener {
 			int[][] sol = puzzle.getSolution();
 			
 			for(int i = 0; i < 9; i++)
-				for(int j = 0; j < 9; j++)
-					if(grid[i][j].getText().isBlank() || !grid[i][j].getValue().equals(sol[i][j])) {
-						grid[i][j].setBackground(Color.ORANGE);
+				for(int j = 0; j < 9; j++) {
+					if(grid[i][j].getBackground().equals(new Color(246, 178, 151)))
+						grid[i][j].setBackground(Color.WHITE);
+					
+					System.out.println(grid[i][j].getValue());
+
+					if(grid[i][j].getText().isBlank() || (Integer.parseInt(grid[i][j].getText()) != sol[i][j])) {
+						grid[i][j].setBackground(new Color(246, 178, 151));
 					}
+				}
 			changeColor = true;
 		}
 		
@@ -262,7 +272,7 @@ public class Game extends JFrame implements ActionListener {
 					for(int i = 0; i < 9; i++)
 						for(int j = 0; j < 9; j++)
 							if(grid[i][j].getText().isBlank() || !grid[i][j].getValue().equals(sol[i][j])) {
-								grid[i][j].setBackground(Color.ORANGE);
+								grid[i][j].setBackground(new Color(246, 178, 151));
 								grid[i][j].setEditable(false);
 							}
 				}
