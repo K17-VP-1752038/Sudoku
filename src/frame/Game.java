@@ -77,19 +77,26 @@ public class Game extends JFrame implements ActionListener {
 		JPanel board = new JPanel();
 		board.setLayout(new GridLayout(9, 9));
 		board.setPreferredSize(new Dimension(250, 250));
-		board.setBorder(BorderFactory.createLineBorder(Color.orange.darker(), 1));
+//		board.setBorder(BorderFactory.createLineBorder(new Color(148, 83, 5), 1));
+		board.setBackground(new Color(148, 83, 5));
 		
 		NumberFormat number = NumberFormat.getNumberInstance();
+		int x, y;
 		grid = new JFormattedTextField[9][9];
 		for(int i = 0; i < 9; i++) {
 			for(int j = 0; j < 9; j++) {
+				x = 1;
+				y = 1;
+				if((i + 1)%3 == 0) y = 2;
+				if((j + 1)%3 == 0) x = 2;
+				
 				grid[i][j] = new JFormattedTextField(number);
 				grid[i][j].setDocument(new JFormattedTextFieldLimit(1));
 				grid[i][j].setSize(new Dimension(50, 50));
 				grid[i][j].setMaximumSize(getSize());
 				grid[i][j].setFont(new Font("Arial", Font.PLAIN, 14));
 				grid[i][j].setHorizontalAlignment(JFormattedTextField.CENTER);
-				grid[i][j].setBorder(BorderFactory.createLineBorder(Color.orange.darker(), 1));
+				grid[i][j].setBorder(BorderFactory.createMatteBorder(0, 0, y, x, new Color(148, 83, 5)));
 				board.add(grid[i][j]);
 				
 				grid[i][j].addMouseListener(new MouseAdapter() {
@@ -213,9 +220,9 @@ public class Game extends JFrame implements ActionListener {
 				grid[i][j].setEnabled(true);
 				if(arr[i][j] > 0) {
 					grid[i][j].setText(arr[i][j] + "");
-					grid[i][j].setBackground(new Color(54,117,23));
-					grid[i][j].setEditable(false);
+					grid[i][j].setBackground(new Color(215, 215, 215));
 					grid[i][j].setEnabled(false);
+					grid[i][j].setDisabledTextColor(Color.BLACK);
 				}
 			}
 	}
@@ -247,8 +254,6 @@ public class Game extends JFrame implements ActionListener {
 					if(grid[i][j].getBackground().equals(new Color(246, 178, 151)))
 						grid[i][j].setBackground(Color.WHITE);
 					
-					System.out.println(grid[i][j].getValue());
-
 					if(grid[i][j].getText().isBlank() || (Integer.parseInt(grid[i][j].getText()) != sol[i][j])) {
 						grid[i][j].setBackground(new Color(246, 178, 151));
 					}
