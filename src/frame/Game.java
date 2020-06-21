@@ -51,10 +51,12 @@ public class Game extends JFrame implements ActionListener {
 	 */
 	public Game() {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setSize(610, 380);
+		setSize(610, 382);
 		setLocationRelativeTo(null);
 		setTitle("Game sudoku");
-//		setResizable(false);
+		setResizable(false);
+		Image icon = Toolkit.getDefaultToolkit().getImage("img/sudoku.png");  
+        setIconImage(icon);
 		
 		puzzle = new sudoku(9);
 		changeColor = false;
@@ -63,7 +65,7 @@ public class Game extends JFrame implements ActionListener {
 		try {
 			img = ImageIO.read(new File("img/background.jpg"));
 			ImagePanel contentPane = new ImagePanel(img);
-			contentPane.setLayout(new BorderLayout(5, 5));
+			contentPane.setLayout(new BorderLayout(10, 5));
 			setContentPane(contentPane);
 		} catch (IOException e1) {
 			e1.printStackTrace();
@@ -92,13 +94,24 @@ public class Game extends JFrame implements ActionListener {
 				grid[i][j].setBorder(BorderFactory.createMatteBorder(0, 0, y, x, new Color(148, 83, 5)));
 				board.add(grid[i][j]);
 				
+				
+//				grid[i][j].addKeyListener(new KeyAdapter() {
+//				    public void keyPressed(KeyEvent evt) {
+//				           if(evt.getKeyCode() == KeyEvent.VK_UP) {
+//				        	   
+//				           }
+//				           if(evt.getKeyCode() == KeyEvent.VK_RIGHT) {
+//				        	   grid[i][j + 1].requestFocus();
+//				           }
+//				       }
+//				});
 				grid[i][j].addMouseListener(new MouseAdapter() {
 					   @Override
 					    public void mousePressed(MouseEvent e) {
 						   if(changeColor)
 							   resetPuzzleFont();
 					    }
-					});
+				});
 			}
 		}
 		
