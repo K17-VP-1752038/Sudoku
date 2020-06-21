@@ -22,7 +22,6 @@ public class Game extends JFrame implements ActionListener {
 	 */
 	private static final long serialVersionUID = 1L;
 	
-	private JPanel contentPane;
 	private JLabel time_run;
 	private JButton btn_new, btn_check, btn_submit, btn_restart;
 	private JFormattedTextField[][] grid;
@@ -52,13 +51,10 @@ public class Game extends JFrame implements ActionListener {
 	 */
 	public Game() {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 590, 358);
-		contentPane = new JPanel();
-		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
-		setContentPane(contentPane);
+		setSize(610, 380);
 		setLocationRelativeTo(null);
 		setTitle("Game sudoku");
-		setResizable(false);
+//		setResizable(false);
 		
 		puzzle = new sudoku(9);
 		changeColor = false;
@@ -66,9 +62,9 @@ public class Game extends JFrame implements ActionListener {
 		BufferedImage img;
 		try {
 			img = ImageIO.read(new File("img/background.jpg"));
-			ImagePanel img_pan = new ImagePanel(img);
-			img_pan.setLayout(new BorderLayout(10, 5));
-			setContentPane(img_pan);
+			ImagePanel contentPane = new ImagePanel(img);
+			contentPane.setLayout(new BorderLayout(5, 5));
+			setContentPane(contentPane);
 		} catch (IOException e1) {
 			e1.printStackTrace();
 		}
@@ -76,8 +72,7 @@ public class Game extends JFrame implements ActionListener {
 		// tao o khung 3x3
 		JPanel board = new JPanel();
 		board.setLayout(new GridLayout(9, 9));
-		board.setPreferredSize(new Dimension(250, 250));
-//		board.setBorder(BorderFactory.createLineBorder(new Color(148, 83, 5), 1));
+		board.setPreferredSize(new Dimension(265, 265));
 		board.setBackground(new Color(148, 83, 5));
 		
 		NumberFormat number = NumberFormat.getNumberInstance();
@@ -87,13 +82,11 @@ public class Game extends JFrame implements ActionListener {
 			for(int j = 0; j < 9; j++) {
 				x = 1;
 				y = 1;
-				if((i + 1)%3 == 0) y = 2;
-				if((j + 1)%3 == 0) x = 2;
+				if(i == 2 || i == 5) y = 2;
+				if(j == 2 || j == 5) x = 2;
 				
 				grid[i][j] = new JFormattedTextField(number);
 				grid[i][j].setDocument(new JFormattedTextFieldLimit(1));
-				grid[i][j].setSize(new Dimension(50, 50));
-				grid[i][j].setMaximumSize(getSize());
 				grid[i][j].setFont(new Font("Arial", Font.PLAIN, 14));
 				grid[i][j].setHorizontalAlignment(JFormattedTextField.CENTER);
 				grid[i][j].setBorder(BorderFactory.createMatteBorder(0, 0, y, x, new Color(148, 83, 5)));
@@ -175,7 +168,7 @@ public class Game extends JFrame implements ActionListener {
 		// Panel title
 		JPanel tit_pan = new JPanel();
 		tit_pan.setBorder(new EmptyBorder(8,0,0,0));;
-		tit_pan.add(new JLabel("SUDOKU"));
+		tit_pan.add(new JLabel("This is a SUDOKU"));
 //		title.setFont(new Font("Arial", Font.BOLD, 13));
 		
 		//chinh opacity cho cac panel
@@ -276,7 +269,7 @@ public class Game extends JFrame implements ActionListener {
 
 					for(int i = 0; i < 9; i++)
 						for(int j = 0; j < 9; j++)
-							if(grid[i][j].getText().isBlank() || !grid[i][j].getValue().equals(sol[i][j])) {
+							if(grid[i][j].getText().isBlank() || (Integer.parseInt(grid[i][j].getText()) != sol[i][j])) {
 								grid[i][j].setBackground(new Color(246, 178, 151));
 								grid[i][j].setEditable(false);
 							}
