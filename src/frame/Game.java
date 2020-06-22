@@ -33,18 +33,18 @@ public class Game extends JFrame implements ActionListener {
 	/**
 	 * Launch the application.
 	 */
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					Game frame = new Game();
-					frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
+//	public static void main(String[] args) {
+//		EventQueue.invokeLater(new Runnable() {
+//			public void run() {
+//				try {
+//					Game frame = new Game();
+//					frame.setVisible(true);
+//				} catch (Exception e) {
+//					e.printStackTrace();
+//				}
+//			}
+//		});
+//	}
 
 	/**
 	 * Create the frame.
@@ -290,7 +290,7 @@ public class Game extends JFrame implements ActionListener {
 			}
 			else {
 				timer.stop();
-				JOptionPane.showMessageDialog(null, "Conglatulation! You're a genious :D\n Your time is " + time_run);
+				JOptionPane.showMessageDialog(null, "Conglatulation! You're a genious :D\n Your time is " + time_run.getText());
 			}
 			
 		}
